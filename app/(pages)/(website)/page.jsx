@@ -18,7 +18,6 @@ const Page = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // só roda no client
     const fetchCreditos = async () => {
       try {
         const res = await fetch(API_URL)
@@ -26,7 +25,6 @@ const Page = () => {
         const ativos = data.filter((c) => c.ativo)
         setCreditos(ativos)
 
-        // verifica se já tem código válido no localStorage
         const savedCode = localStorage.getItem("creditoCode")
         if (savedCode && ativos.some((c) => c.codigo === savedCode)) {
           setAutorizado(true)
@@ -37,6 +35,7 @@ const Page = () => {
         setLoading(false)
       }
     }
+
     fetchCreditos()
   }, [])
 
@@ -50,7 +49,11 @@ const Page = () => {
   }
 
   if (loading) {
-    return <div className="flex h-screen items-center justify-center">Carregando...</div>
+    return (
+      <div className="flex h-screen items-center justify-center">
+        Carregando...
+      </div>
+    )
   }
 
   if (!autorizado) {
