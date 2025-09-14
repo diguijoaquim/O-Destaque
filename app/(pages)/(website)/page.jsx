@@ -3,27 +3,37 @@
 import React, { useEffect, useState } from "react"
 import FlipbookViewer from "@/app/_components/ui/flipbook-viewer/flipbook-viewer"
 
-// MockDB de créditos válidos
-const mockDB = {
-  "123456": { user: "João", ativo: true },
-  "654321": { user: "Maria", ativo: true },
-  "999999": { user: "Pedro", ativo: false },
+interface Credito {
+  codigo: string
+  usuario: string
+  ativo: boolean
 }
+
+const API_URL = "https://diqui.pythonanywhere.com/api/creditos"
 
 const Page = () => {
   const [codigo, setCodigo] = useState("")
   const [autorizado, setAutorizado] = useState(false)
+  const [creditos, setCreditos] = useState<Credito[]>([])
 
+  // Buscar créditos ativos da API
   useEffect(() => {
-    // verifica se já tem código válido no localStorage
-    const savedCode = localStorage.getItem("creditoCode")
-    if (savedCode && mockDB[savedCode]?.ativo) {
-      setAutorizado(true)
-    }
+    fetch(API_URL)
+      .then((res) => res.json())
+      .then((data: Credito[]) => {
+        const ativos = data.filter((c) => c.ativo)
+        setCreditos(ativos)
+        // Verifica se já tem código válido no localStorage
+        const savedCode = localStorage.getItem("creditoCode")
+        if (savedCode && ativos.some((c) => c.codigo === savedCode)) {
+          setAutorizado(true)
+        }
+      })
+      .catch((err) => console.error("Erro ao buscar créditos:", err))
   }, [])
 
   const validarCodigo = () => {
-    if (mockDB[codigo] && mockDB[codigo].ativo) {
+    if (creditos.some((c) => c.codigo === codigo)) {
       localStorage.setItem("creditoCode", codigo)
       setAutorizado(true)
     } else {
