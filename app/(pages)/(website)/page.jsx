@@ -15,21 +15,29 @@ const Page = () => {
   const [codigo, setCodigo] = useState("")
   const [autorizado, setAutorizado] = useState(false)
   const [creditos, setCreditos] = useState<Credito[]>([])
+  const [loading, setLoading] = useState(true)
 
-  // Buscar créditos ativos da API
   useEffect(() => {
-    fetch(API_URL)
-      .then((res) => res.json())
-      .then((data: Credito[]) => {
+    // só roda no client
+    const fetchCreditos = async () => {
+      try {
+        const res = await fetch(API_URL)
+        const data: Credito[] = await res.json()
         const ativos = data.filter((c) => c.ativo)
         setCreditos(ativos)
-        // Verifica se já tem código válido no localStorage
+
+        // verifica se já tem código válido no localStorage
         const savedCode = localStorage.getItem("creditoCode")
         if (savedCode && ativos.some((c) => c.codigo === savedCode)) {
           setAutorizado(true)
         }
-      })
-      .catch((err) => console.error("Erro ao buscar créditos:", err))
+      } catch (err) {
+        console.error("Erro ao buscar créditos:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchCreditos()
   }, [])
 
   const validarCodigo = () => {
@@ -39,6 +47,10 @@ const Page = () => {
     } else {
       alert("Código inválido ou inativo!")
     }
+  }
+
+  if (loading) {
+    return <div className="flex h-screen items-center justify-center">Carregando...</div>
   }
 
   if (!autorizado) {
