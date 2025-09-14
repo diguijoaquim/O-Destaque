@@ -1,3 +1,4 @@
+"use client"
 
 import React, { useEffect, useState } from "react"
 import FlipbookViewer from "@/app/_components/ui/flipbook-viewer/flipbook-viewer"
@@ -6,7 +7,7 @@ import FlipbookViewer from "@/app/_components/ui/flipbook-viewer/flipbook-viewer
 const mockDB = {
   "123456": { user: "João", ativo: true },
   "654321": { user: "Maria", ativo: true },
-  "999999": { user: "Pedro", ativo: false }, // exemplo expirado
+  "999999": { user: "Pedro", ativo: false },
 }
 
 const Page = () => {
@@ -32,7 +33,7 @@ const Page = () => {
 
   if (!autorizado) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex h-screen items-center justify-center bg-gray-100">
         <div className="p-6 rounded-2xl shadow-lg bg-white w-80 text-center">
           <h2 className="text-xl font-bold mb-4">Digite seu código</h2>
           <input
