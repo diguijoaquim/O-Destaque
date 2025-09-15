@@ -19,20 +19,17 @@ const Page = () => {
         }
         const data = await res.json()
 
+        console.log("✅ Dados recebidos da API:", data) // print do JSON
+
         const ativos = data.filter((c) => c.ativo === true)
         setCreditos(ativos)
 
-        // Verifica se já tem código salvo e válido
         const saved = localStorage.getItem("codigo")
         if (saved && ativos.some(c => c.codigo === saved)) {
           setAutorizado(true)
         }
-      } catch (error: any) {
-        // Mostra o erro completo no console
-        console.error("❌ Erro ao buscar créditos:")
-        console.error("Mensagem:", error.message)
-        console.error("Stack:", error.stack)
-        console.error("Objeto completo:", error)
+      } catch (error) {
+        console.error("❌ Erro ao buscar créditos:", error)
       } finally {
         setLoading(false)
       }
@@ -86,13 +83,10 @@ const Page = () => {
     )
   }
 
-  // Conteúdo autorizado
   return (
     <div className="p-10 text-center">
       <h1 className="text-2xl font-bold text-green-700 mb-4">✅ Acesso liberado</h1>
       <p>Agora você pode ver o conteúdo.</p>
-      {/* Se quiser mostrar seu FlipbookViewer, descomente abaixo */}
-      {/* <FlipbookViewer pdfUrl="/DESTAQUE-1.pdf" /> */}
     </div>
   )
 }
