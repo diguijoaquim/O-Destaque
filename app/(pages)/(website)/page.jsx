@@ -51,7 +51,7 @@ const Page = () => {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex h-screen items-center justify-center bg-black text-white">
         Carregando...
       </div>
     )
@@ -59,19 +59,19 @@ const Page = () => {
 
   if (!autorizado) {
     return (
-      <div className="flex h-screen items-center justify-center bg-gray-100">
-        <div className="p-6 rounded-2xl shadow-lg bg-white w-80 text-center">
-          <h2 className="text-xl font-bold mb-4">Digite seu código</h2>
+      <div className="flex h-screen items-center justify-center bg-black">
+        <div className="p-6 rounded-2xl shadow-lg bg-[#0d0d0d] w-80 text-center border border-gray-800">
+          <h2 className="text-xl font-bold mb-4 text-white">Digite seu código</h2>
           <input
             type="text"
             value={codigo}
             onChange={(e) => setCodigo(e.target.value)}
             placeholder="Insira seu código"
-            className="border rounded-lg p-2 w-full mb-4 text-center"
+            className="border-2 border-purple-600 rounded-lg p-2 w-full mb-4 text-center bg-transparent text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
           <button
             onClick={validarCodigo}
-            className="bg-blue-600 text-white rounded-lg px-4 py-2 w-full hover:bg-blue-700 transition"
+            className="bg-gradient-to-r from-purple-600 to-purple-800 text-white rounded-lg px-4 py-2 w-full font-semibold hover:opacity-90 transition"
           >
             Entrar
           </button>
@@ -93,8 +93,10 @@ const Page = () => {
   }
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold text-green-700 mb-4 text-center">✅ Acesso liberado</h1>
+    <div className="p-4 bg-black min-h-screen">
+      <h1 className="text-2xl font-bold text-green-500 mb-4 text-center">
+        ✅ Acesso liberado
+      </h1>
       <FlipbookViewer pdfUrl="/DESTAQUE-1.pdf" />
     </div>
   )
