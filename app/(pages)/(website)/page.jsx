@@ -3,25 +3,19 @@
 import React, { useEffect, useState } from "react"
 import FlipbookViewer from "@/app/_components/ui/flipbook-viewer/flipbook-viewer"
 
-interface Credito {
-  codigo: string
-  usuario: string
-  ativo: boolean
-}
-
 const API_URL = "https://diqui.pythonanywhere.com/api/creditos"
 
 const Page = () => {
   const [codigo, setCodigo] = useState("")
   const [autorizado, setAutorizado] = useState(false)
-  const [creditos, setCreditos] = useState<Credito[]>([])
+  const [creditos, setCreditos] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchCreditos = async () => {
       try {
         const res = await fetch(API_URL)
-        const data: Credito[] = await res.json()
+        const data = await res.json()
         const ativos = data.filter((c) => c.ativo)
         setCreditos(ativos)
 
