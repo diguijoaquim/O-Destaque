@@ -14,7 +14,11 @@ const Page = () => {
     const fetchCreditos = async () => {
       try {
         const res = await fetch(API_URL)
+        if (!res.ok) {
+          throw new Error(`Erro HTTP! status: ${res.status}`)
+        }
         const data = await res.json()
+
         const ativos = data.filter((c) => c.ativo === true)
         setCreditos(ativos)
 
@@ -23,8 +27,12 @@ const Page = () => {
         if (saved && ativos.some(c => c.codigo === saved)) {
           setAutorizado(true)
         }
-      } catch (error) {
-        console.error("Erro ao buscar créditos:", error)
+      } catch (error: any) {
+        // Mostra o erro completo no console
+        console.error("❌ Erro ao buscar créditos:")
+        console.error("Mensagem:", error.message)
+        console.error("Stack:", error.stack)
+        console.error("Objeto completo:", error)
       } finally {
         setLoading(false)
       }
@@ -65,6 +73,7 @@ const Page = () => {
             onChange={(e) => setCodigo(e.target.value)}
             placeholder="Digite o código"
             className="w-full p-2 border rounded mb-4"
+            autoFocus
           />
           <button
             onClick={verificarCodigo}
@@ -82,7 +91,7 @@ const Page = () => {
     <div className="p-10 text-center">
       <h1 className="text-2xl font-bold text-green-700 mb-4">✅ Acesso liberado</h1>
       <p>Agora você pode ver o conteúdo.</p>
-      {/* Exemplo: FlipbookViewer aqui */}
+      {/* Se quiser mostrar seu FlipbookViewer, descomente abaixo */}
       {/* <FlipbookViewer pdfUrl="/DESTAQUE-1.pdf" /> */}
     </div>
   )
