@@ -10,6 +10,7 @@ const Page = () => {
   const [autorizado, setAutorizado] = useState(false)
   const [creditos, setCreditos] = useState([])
   const [loading, setLoading] = useState(true)
+  const [erro, setErro] = useState(false)
 
   useEffect(() => {
     const fetchCreditos = async () => {
@@ -20,7 +21,7 @@ const Page = () => {
         setCreditos(ativos)
 
         const savedCode = localStorage.getItem("creditoCode")
-        if (savedCode && ativos.some((c) => c.codigo === savedCode)) {
+        if (savedCode && ativos.some((c) => String(c.codigo).trim() === savedCode.trim())) {
           setAutorizado(true)
         }
       } catch (err) {
@@ -34,17 +35,21 @@ const Page = () => {
   }, [])
 
   const validarCodigo = () => {
-    if (creditos.some((c) => c.codigo === codigo)) {
-      localStorage.setItem("creditoCode", codigo)
+    const codigoLimpo = codigo.trim()
+    const encontrou = creditos.some((c) => String(c.codigo).trim() === codigoLimpo)
+
+    if (encontrou) {
+      localStorage.setItem("creditoCode", codigoLimpo)
       setAutorizado(true)
+      setErro(false)
     } else {
-      alert("Código inválido ou inativo!")
+      setErro(true)
     }
   }
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex h-screen items-center justify-center text-lg font-semibold">
         Carregando...
       </div>
     )
@@ -52,19 +57,38 @@ const Page = () => {
 
   if (!autorizado) {
     return (
-      <div className="flex h-screen items-center justify-center bg-gray-100">
-        <div className="p-6 rounded-2xl shadow-lg bg-white w-80 text-center">
-          <h2 className="text-xl font-bold mb-4">Digite seu código</h2>
+      <div className="flex h-screen items-center justify-center bg-gradient-to-br from-gray-100 to-blue-100">
+        <div className="p-8 rounded-2xl shadow-2xl bg-white w-full max-w-sm text-center">
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">Acesso Restrito</h2>
+          <p className="text-gray-600 mb-4">Digite o código de acesso</p>
+
           <input
             type="text"
             value={codigo}
-            onChange={(e) => setCodigo(e.target.value)}
+            onChange={(e) => {
+              setCodigo(e.target.value)
+              setErro(false)
+            }}
             placeholder="Insira seu código"
-            className="border rounded-lg p-2 w-full mb-4 text-center"
+            className={`border rounded-lg p-3 w-full mb-3 text-center outline-none transition ${
+              erro ? "border-red-500" : "border-gray-300 focus:border-blue-500"
+            }`}
           />
+
+          {erro && (
+            <p className="text-red-500 text-sm mb-3">
+              Código inválido ou inativo!
+            </p>
+          )}
+
           <button
             onClick={validarCodigo}
-            className="bg-blue-600 text-white rounded-lg px-4 py-2 w-full hover:bg-blue-700 transition"
+            disabled={codigo.trim() === ""}
+            className={`rounded-lg px-4 py-2 w-full transition font-semibold ${
+              codigo.trim() === ""
+                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                : "bg-blue-600 text-white hover:bg-blue-700"
+            }`}
           >
             Entrar
           </button>
