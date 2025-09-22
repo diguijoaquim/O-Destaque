@@ -97,7 +97,7 @@ const Page = () => {
       <h1 className="text-2xl font-bold text-green-500 mb-4 text-center">
         ✅ Acesso liberado
       </h1>
-      <FlipbookViewer pdfUrl="/DESTAQUE-1.pdf" />
+      <FlipbookViewer pdfUrl="/DESTAQUE-2.pdf" />
     </div>
   )
 }
